@@ -10,7 +10,7 @@ import java.util.Random;
  * Abstract Class to represent a ship
  */
 public abstract class AbstractShip implements Ship {
-  Random random = new Random();
+  protected Random random = new Random();
   List<Coord> placement = new ArrayList<>();
 
   /**
