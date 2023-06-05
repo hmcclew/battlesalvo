@@ -1,4 +1,7 @@
 package cs3500.pa04.json;
 
-public record ReportDamageJson() {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record ReportDamageJson(
+    @JsonProperty("volley") VolleyJson[] volley) {
 }

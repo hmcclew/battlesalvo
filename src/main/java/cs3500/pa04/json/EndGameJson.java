@@ -1,8 +1,13 @@
 package cs3500.pa04.json;
 
-public record EndGameJson() {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import cs3500.pa04.client.model.GameResult;
 
-  public String gameResult() {
-    return "";
+public record EndGameJson(
+    @JsonProperty("result") GameResult gameResult,
+    @JsonProperty("reason") String reason) {
+
+  public GameResult gameResult() {
+    return GameResult.DRAW;
   }
 }
