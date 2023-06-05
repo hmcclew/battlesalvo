@@ -2,8 +2,9 @@ package cs3500.pa04.view;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cs3500.pa04.model.coordinate.BattleSalvoCoord;
-import cs3500.pa04.model.coordinate.Coord;
+import cs3500.pa04.client.model.coordinate.BattleSalvoCoord;
+import cs3500.pa04.client.model.coordinate.Coord;
+import cs3500.pa04.client.view.RoundView;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;

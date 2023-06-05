@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import cs3500.pa04.model.ship.Submarine;
+import cs3500.pa04.client.model.coordinate.BattleSalvoCoord;
+import cs3500.pa04.client.model.coordinate.Coord;
+import cs3500.pa04.client.model.ship.Submarine;
 import org.junit.jupiter.api.Test;
 
 class BattleSalvoCoordTest {

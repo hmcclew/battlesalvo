@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import cs3500.pa04.controller.BattleSalvoController;
-import cs3500.pa04.model.player.AutomatedPlayer;
-import cs3500.pa04.model.player.ManualPlayer;
-import cs3500.pa04.model.ship.ShipType;
+import cs3500.pa04.client.controller.BattleSalvoController;
+import cs3500.pa04.client.model.BattleSalvoModel;
+import cs3500.pa04.client.model.player.AutomatedPlayer;
+import cs3500.pa04.client.model.player.ManualPlayer;
+import cs3500.pa04.client.model.ship.ShipType;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;

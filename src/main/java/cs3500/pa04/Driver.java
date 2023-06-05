@@ -1,6 +1,6 @@
 package cs3500.pa04;
 
-import cs3500.pa04.controller.BattleSalvoController;
+import cs3500.pa04.client.controller.BattleSalvoController;
 
 /**
  * This is the main driver of this project.

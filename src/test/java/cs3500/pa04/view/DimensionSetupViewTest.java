@@ -2,6 +2,7 @@ package cs3500.pa04.view;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cs3500.pa04.client.view.DimensionSetupView;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeEach;
