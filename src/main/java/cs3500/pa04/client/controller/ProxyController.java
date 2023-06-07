@@ -14,6 +14,8 @@ import cs3500.pa04.json.JoinJson;
 import cs3500.pa04.json.MessageJson;
 import cs3500.pa04.json.SetupJson;
 import cs3500.pa04.json.ShipJson;
+import cs3500.pa04.json.TakeShotsJson;
+import cs3500.pa04.json.VolleyJson;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -70,7 +72,7 @@ public class ProxyController implements Controller {
       handleSetup(arguments);
     }
     else if ("take-shots".equals(name)) {
-      handleTakeShots(arguments);
+      handleTakeShots();
     }
     else if ("report-damage".equals(name)) {
       handleReportDamage(arguments);
@@ -132,9 +134,20 @@ public class ProxyController implements Controller {
     this.out.println(setupJson);
   }
 
-  private void handleTakeShots(JsonNode arguments) {
-
+  private void handleTakeShots() {
     List<Coord> shotsTaken = player.takeShots();
+
+    CoordJson[] coordJson = new CoordJson[shotsTaken.size()];
+
+    for (int i = 0; i < shotsTaken.size(); i++) {
+      Coord c = shotsTaken.get(i);
+      CoordJson cJson = new CoordJson(c.getX(), c.getY());
+      coordJson[i] = cJson;
+    }
+
+    VolleyJson volleyJson = new VolleyJson(coordJson);
+    TakeShotsJson takeShotsJson = new TakeShotsJson(volleyJson);
+    this.out.println(takeShotsJson);
   }
 
   private void handleReportDamage(JsonNode arguments) {
