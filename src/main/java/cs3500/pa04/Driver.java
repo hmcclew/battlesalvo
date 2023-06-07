@@ -15,9 +15,8 @@ public class Driver {
   public static void runClient(String host, int port) {
     try {
       Socket server = new Socket(host, port);
-      BattleSalvoController controller = new BattleSalvoController();
       ProxyController proxyController = new ProxyController(server,
-          new AutomatedPlayer(), controller);
+          new AutomatedPlayer());
       proxyController.run();
     } catch (IOException e) {
       System.err.println("An Unexpected error occurred");

@@ -3,15 +3,18 @@ package cs3500.pa04.client.controller;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cs3500.pa04.client.model.GameResult;
 import cs3500.pa04.client.model.GameType;
+import cs3500.pa04.client.model.coordinate.BattleSalvoCoord;
 import cs3500.pa04.client.model.coordinate.Coord;
 import cs3500.pa04.client.model.player.Player;
 import cs3500.pa04.client.model.ship.Ship;
 import cs3500.pa04.client.model.ship.ShipType;
 import cs3500.pa04.json.CoordJson;
-import cs3500.pa04.json.FleetJson;
 import cs3500.pa04.json.JoinJson;
+import cs3500.pa04.json.JsonUtils;
 import cs3500.pa04.json.MessageJson;
+import cs3500.pa04.json.ReportDamageJson;
 import cs3500.pa04.json.SetupJson;
 import cs3500.pa04.json.ShipJson;
 import cs3500.pa04.json.TakeShotsJson;
@@ -32,16 +35,14 @@ public class ProxyController implements Controller {
   private final PrintStream out;
   private final Player player;
   private final ObjectMapper mapper;
-  private BattleSalvoController battleSalvoController;
 
-  public ProxyController(Socket server, Player player, BattleSalvoController controller)
+  public ProxyController(Socket server, Player player)
       throws IOException {
     this.server = server;
     this.in = server.getInputStream();
     this.out = new PrintStream(server.getOutputStream());
     this.player = player;
     this.mapper = new ObjectMapper();
-    this.battleSalvoController = controller;
   }
 
   /**
@@ -50,12 +51,19 @@ public class ProxyController implements Controller {
   @Override
   public void run() {
     try {
-      JsonParser parser = this.mapper.getFactory().createParser(this.in);
+      JsonNode message = mapper.readTree(in);
+      String name = message.path("method-name").toString();
+      JsonNode arguments = message.path("arguments");
+
+      System.out.println("hi");
+      System.out.println("hi");
 
       while (!this.server.isClosed()) {
-        MessageJson message = parser.readValueAs(MessageJson.class);
-        delegateMessage(message);
+        System.out.println("hi");
+        MessageJson messageJson = new MessageJson(name, arguments);
+        delegateMessage(messageJson);
       }
+
     } catch (IOException e) {
       System.err.println("Disconnected from server or parsing exception");
     }
@@ -64,9 +72,8 @@ public class ProxyController implements Controller {
   private void delegateMessage(MessageJson message) {
     String name = message.messageName();
     JsonNode arguments = message.arguments();
-
     if ("join".equals(name)) {
-      handleJoin(arguments);
+      handleJoin();
     }
     else if ("setup".equals(name)) {
       handleSetup(arguments);
@@ -88,10 +95,11 @@ public class ProxyController implements Controller {
     }
   }
 
-  private void handleJoin(JsonNode arguments) {
-    JoinJson clientResponse = new JoinJson("swiftiesunite", GameType.SINGLE);
+  private void handleJoin() {
+    JoinJson joinJson = new JoinJson("swiftiesunite", GameType.SINGLE);
 
-    this.out.println(clientResponse);
+    JsonNode jsonResponse = JsonUtils.serializeRecord(joinJson);
+    this.out.println(jsonResponse);
   }
 
   private void parseSpecifications(Iterator<Map.Entry<String, JsonNode>> iterator,
@@ -131,7 +139,16 @@ public class ProxyController implements Controller {
 
     SetupJson setupJson = new SetupJson(shipJsonArray);
 
-    this.out.println(setupJson);
+    JsonNode jsonResponse = JsonUtils.serializeRecord(setupJson);
+    this.out.println(jsonResponse);
+  }
+
+  private void formatShotsToCoordJsonArray(List<Coord> shots, CoordJson[] coordJsonArray) {
+    for (int i = 0; i < shots.size(); i++) {
+      Coord c = shots.get(i);
+      CoordJson cJson = new CoordJson(c.getX(), c.getY());
+      coordJsonArray[i] = cJson;
+    }
   }
 
   private void handleTakeShots() {
@@ -139,31 +156,56 @@ public class ProxyController implements Controller {
 
     CoordJson[] coordJson = new CoordJson[shotsTaken.size()];
 
-    for (int i = 0; i < shotsTaken.size(); i++) {
-      Coord c = shotsTaken.get(i);
-      CoordJson cJson = new CoordJson(c.getX(), c.getY());
-      coordJson[i] = cJson;
-    }
+    formatShotsToCoordJsonArray(shotsTaken, coordJson);
 
     VolleyJson volleyJson = new VolleyJson(coordJson);
     TakeShotsJson takeShotsJson = new TakeShotsJson(volleyJson);
-    this.out.println(takeShotsJson);
+
+    JsonNode jsonResponse = JsonUtils.serializeRecord(takeShotsJson);
+    this.out.println(jsonResponse);
   }
 
+  private void parseCoordinateArguments(JsonNode coordinates, List<Coord> shots) {
+    for (JsonNode coordinateNode : coordinates) {
+      int x = coordinateNode.get("x").asInt();
+      int y = coordinateNode.get("y").asInt();
+      Coord c = new BattleSalvoCoord(x, y);
+      shots.add(c);
+    }
+  }
   private void handleReportDamage(JsonNode arguments) {
+    List<Coord> opponentShots = new ArrayList<>();
+    JsonNode coordinates = arguments.path("coordinates");
 
+    parseCoordinateArguments(coordinates, opponentShots);
+
+    List<Coord> damage = player.reportDamage(opponentShots);
+    CoordJson[] coordJsonArray = new CoordJson[damage.size()];
+
+    formatShotsToCoordJsonArray(damage, coordJsonArray);
+    VolleyJson volleyJson = new VolleyJson(coordJsonArray);
+    ReportDamageJson reportDamageJson = new ReportDamageJson(volleyJson);
+
+    JsonNode jsonResponse = JsonUtils.serializeRecord(reportDamageJson);
+    this.out.println(jsonResponse);
   }
 
   private void handleSuccessfulHits(JsonNode arguments) {
+    List<Coord> successfulShots = new ArrayList<>();
+    JsonNode coordinates = arguments.path("coordinates");
 
+    parseCoordinateArguments(coordinates, successfulShots);
+
+    player.successfulHits(successfulShots);
   }
 
   private void handleEndGame(JsonNode arguments) {
+    String result = arguments.path("result").toString();
+    GameResult gameResult = GameResult.valueOf(result.toUpperCase());
 
-  }
+    String reason = arguments.path("reason").toString();
 
-  private List<Coord> getPlayerShots(FleetJson args) {
-    return new ArrayList<>();
+    player.endGame(gameResult, reason);
   }
 
 }
