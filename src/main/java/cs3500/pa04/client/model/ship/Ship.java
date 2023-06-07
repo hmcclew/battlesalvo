@@ -7,6 +7,8 @@ import java.util.List;
  * Interface to represent a type of ship in BattleSalvo
  */
 public interface Ship {
+
+  String getDirection();
   /**
    * Gets the size of a ship
    *

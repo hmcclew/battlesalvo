@@ -12,6 +12,11 @@ import java.util.Random;
 public abstract class AbstractShip implements Ship {
   protected Random random = new Random();
   List<Coord> placement = new ArrayList<>();
+  private String direction;
+
+  public String getDirection() {
+    return this.direction;
+  }
 
   /**
    * Clears the placement of this ship
@@ -61,11 +66,13 @@ public abstract class AbstractShip implements Ship {
       for (int i = 1; i < getSize(); i++) {
         Coord nextCoord = new BattleSalvoCoord(startCordX, startCordY - i);
         placement.add(nextCoord);
+        direction = "VERTICAL";
       }
     } else {
       for (int i = 1; i < getSize(); i++) {
         Coord nextCoord = new BattleSalvoCoord(startCordX - i, startCordY);
         placement.add(nextCoord);
+        direction = "HORIZONTAL";
       }
     }
   }
