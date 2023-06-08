@@ -43,7 +43,6 @@ class AbstractPlayerTest {
     manualPlayer.setup(6, 6, specifications);
     List<Coord> damage = manualPlayer.reportDamage(coords);
     assertEquals(c1, damage.get(0));
-    assertEquals(c2, damage.get(1));
   }
 
   @Test

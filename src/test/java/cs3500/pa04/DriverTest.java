@@ -1,6 +1,5 @@
 package cs3500.pa04;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +19,7 @@ class DriverTest {
       PrintStream originalErr = System.err;
       System.setErr(new PrintStream(errStream));
 
-      driver.main(null);
+      driver.main(new String[0]);
 
       System.setErr(originalErr);
 

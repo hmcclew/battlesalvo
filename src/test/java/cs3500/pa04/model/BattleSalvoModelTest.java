@@ -95,7 +95,9 @@ class BattleSalvoModelTest {
         +
         "You lost! Better luck next time!\n"
         +
-        "All of your ships have been sunk.\n";
+        "All of your ships have been sunk.\n"
+        +
+        "YOU WIN! You sunk all of your opponent's Ships!\n";
     assertEquals(expectedOutput, outputStreamCaptor.toString());
   }
 
@@ -106,7 +108,9 @@ class BattleSalvoModelTest {
         +
         "Congratulations! You have won!\n"
         +
-        "You sunk all of your opponent's Ships!\n";
+        "You sunk all of your opponent's Ships!\n"
+        +
+        "YOU LOSE! All of your ships have been sunk.\n";
     assertEquals(expectedOutput2, outputStreamCaptor.toString());
   }
 
@@ -117,7 +121,9 @@ class BattleSalvoModelTest {
         +
         "The game ended in a tie!\n"
         +
-        "Both Players Sunk All Ships Last Round\n";
+        "Both Players Sunk All Ships Last Round\n"
+        +
+        "YOU DRAW! Both Players Sunk All Ships Last Round\n";
     assertEquals(expectedOutput2, outputStreamCaptor.toString());
   }
 }

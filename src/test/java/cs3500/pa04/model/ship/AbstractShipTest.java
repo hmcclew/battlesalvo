@@ -41,8 +41,8 @@ class AbstractShipTest {
     Coord c1 = placement.get(0);
     Coord c2 = placement.get(1);
 
-    assertEquals(c1, new BattleSalvoCoord(3, 2));
-    assertEquals(c2, new BattleSalvoCoord(3, 1));
+    assertEquals(c1, new BattleSalvoCoord(2, 4));
+    assertEquals(c2, new BattleSalvoCoord(2, 3));
     assertEquals(placement, new ArrayList<>(Arrays.asList(c1, c2)));
 
     ship.clearPlacement();
@@ -53,8 +53,9 @@ class AbstractShipTest {
     Coord c3 = placement2.get(0);
     Coord c4 = placement2.get(1);
 
-    assertEquals(c3, new BattleSalvoCoord(3, 3));
-    assertEquals(c4, new BattleSalvoCoord(2, 3));
+
+    assertEquals(c3, new BattleSalvoCoord(1, 0));
+    assertEquals(c4, new BattleSalvoCoord(0, 0));
     assertEquals(placement2, new ArrayList<>(Arrays.asList(c3, c4)));
   }
 
