@@ -78,6 +78,11 @@ public class ProxyController implements Controller {
     }
   }
 
+  /**
+   * Delegates to the correct method handler based on the message from the server
+   *
+   * @param message the formatted json sent from the server
+   */
   private void delegateMessage(MessageJson message) {
     String name = message.methodName();
     JsonNode arguments = message.arguments();
@@ -99,6 +104,10 @@ public class ProxyController implements Controller {
     }
   }
 
+
+  /**
+   * Handles the join method request from the server
+   */
   private void handleJoin() {
     JoinJson joinJson = new JoinJson("swiftiesunite", GameType.SINGLE.toString());
     JsonNode jsonResponse = JsonUtils.serializeRecord(joinJson);
@@ -108,6 +117,12 @@ public class ProxyController implements Controller {
     this.out.println(messageResponse);
   }
 
+  /**
+   * Parses the specifications sent from the server
+   *
+   * @param iterator an iterator used to create values for the specifications map
+   * @param specifications the specifications sent to players for setup
+   */
   private void parseSpecifications(Iterator<Map.Entry<String, JsonNode>> iterator,
                                    Map<ShipType, Integer> specifications) {
     while (iterator.hasNext()) {
@@ -118,6 +133,12 @@ public class ProxyController implements Controller {
     }
   }
 
+  /**
+   * Formats player setups as a ship json array
+   *
+   * @param playerSetup the list of ships in the player's setup
+   * @param shipJsonArray the array of ship jsons to be filled
+   */
   private void formatAsShipJson(List<Ship> playerSetup, ShipJson[] shipJsonArray) {
     for (int i = 0; i < playerSetup.size(); i++) {
       Ship ship = playerSetup.get(i);
@@ -130,6 +151,9 @@ public class ProxyController implements Controller {
     }
   }
 
+  /**
+   * Handles the setup method request from the server
+   */
   private void handleSetup(JsonNode arguments) {
     int width = arguments.path("width").asInt();
     int height = arguments.path("height").asInt();
@@ -187,6 +211,12 @@ public class ProxyController implements Controller {
     System.out.println(messageResponse);
   }
 
+  /**
+   * Parses the coordinate jsons sent from the server into a list of shots
+   *
+   * @param coordinates the json sent from the server
+   * @param shots the list of shots to be filled
+   */
   private void parseCoordinateArguments(JsonNode coordinates, List<Coord> shots) {
     for (JsonNode coordinateNode : coordinates) {
       int x = coordinateNode.get("x").asInt();
@@ -196,6 +226,9 @@ public class ProxyController implements Controller {
     }
   }
 
+  /**
+   * Handles the report-damage method request from the server
+   */
   private void handleReportDamage(JsonNode arguments) {
     List<Coord> opponentShots = new ArrayList<>();
     JsonNode coordinates = arguments.path("coordinates");
@@ -216,6 +249,9 @@ public class ProxyController implements Controller {
     this.out.println(messageResponse);
   }
 
+  /**
+   * Handles the successful-hits method request from the server
+   */
   private void handleSuccessfulHits(JsonNode arguments) {
     List<Coord> successfulShots = new ArrayList<>();
     JsonNode coordinates = arguments.path("coordinates");
@@ -223,10 +259,14 @@ public class ProxyController implements Controller {
     parseCoordinateArguments(coordinates, successfulShots);
 
     player.successfulHits(successfulShots);
-    MessageJson messageJson = new MessageJson("successful-hits", mapper.createObjectNode());
+    MessageJson messageJson = new MessageJson("successful-hits",
+        mapper.createObjectNode());
     this.out.println(JsonUtils.serializeRecord(messageJson));
   }
 
+  /**
+   * Handles the end-game method request from the server
+   */
   private void handleEndGame(JsonNode arguments) {
     String result = arguments.get("result").asText();
     String reason = arguments.get("reason").asText();
