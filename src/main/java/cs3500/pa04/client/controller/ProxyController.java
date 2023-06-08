@@ -7,6 +7,7 @@ import cs3500.pa04.client.model.GameResult;
 import cs3500.pa04.client.model.GameType;
 import cs3500.pa04.client.model.coordinate.BattleSalvoCoord;
 import cs3500.pa04.client.model.coordinate.Coord;
+import cs3500.pa04.client.model.player.AutomatedPlayer;
 import cs3500.pa04.client.model.player.Player;
 import cs3500.pa04.client.model.ship.Ship;
 import cs3500.pa04.client.model.ship.ShipType;
@@ -28,7 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+
 
 public class ProxyController implements Controller {
   private final Socket server;
@@ -52,40 +53,39 @@ public class ProxyController implements Controller {
   @Override
   public void run() {
     try {
-      JsonNode message = Objects.requireNonNull(mapper.readTree(in));
-      String name = Objects.requireNonNull(message.path("method-name").toString());
-      JsonNode arguments = message.path("arguments");
+      JsonParser parser = this.mapper.getFactory().createParser(this.in);
 
-      while (this.server.isConnected()) {
-        MessageJson messageJson = new MessageJson(name, arguments);
-        delegateMessage(messageJson);
+      while (!this.server.isClosed()) {
+        MessageJson message = parser.readValueAs(MessageJson.class);
+        delegateMessage(message);
       }
 
     } catch (IOException e) {
       System.err.println("Disconnected from server or parsing exception");
+      e.printStackTrace();
     }
   }
 
   private void delegateMessage(MessageJson message) {
-    String name = message.messageName();
+    String name = message.methodName();
     JsonNode arguments = message.arguments();
-    if ("\"join\"".equals(name)) {
+    System.out.println(name);
+    if ("join".equals(name)) {
       handleJoin();
     }
-    else if ("\"setup\"".equals(name)) {
-      System.out.println("hi2");
+    else if ("setup".equals(name)) {
       handleSetup(arguments);
     }
-    else if ("\"take-shots\"".equals(name)) {
+    else if ("take-shots".equals(name)) {
       handleTakeShots();
     }
-    else if ("\"report-damage\"".equals(name)) {
+    else if ("report-damage".equals(name)) {
       handleReportDamage(arguments);
     }
-    else if ("\"successful-hits\"".equals(name)) {
+    else if ("successful-hits".equals(name)) {
       handleSuccessfulHits(arguments);
     }
-    else if ("\"end-game\"".equals(name)) {
+    else if ("end-game".equals(name)) {
       handleEndGame(arguments);
     }
     else {
@@ -95,9 +95,11 @@ public class ProxyController implements Controller {
 
   private void handleJoin() {
     JoinJson joinJson = new JoinJson("swiftiesunite", GameType.SINGLE.toString());
-
     JsonNode jsonResponse = JsonUtils.serializeRecord(joinJson);
-    this.out.println(jsonResponse);
+    MessageJson messageJson = new MessageJson("join", jsonResponse);
+
+    JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
+    this.out.println(messageResponse);
   }
 
   private void parseSpecifications(Iterator<Map.Entry<String, JsonNode>> iterator,
@@ -138,7 +140,10 @@ public class ProxyController implements Controller {
     SetupJson setupJson = new SetupJson(shipJsonArray);
 
     JsonNode jsonResponse = JsonUtils.serializeRecord(setupJson);
-    this.out.println(jsonResponse);
+    MessageJson messageJson = new MessageJson("setup", jsonResponse);
+
+    JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
+    this.out.println(messageResponse);
   }
 
   private void formatShotsToCoordJsonArray(List<Coord> shots, CoordJson[] coordJsonArray) {
@@ -158,9 +163,11 @@ public class ProxyController implements Controller {
 
     VolleyJson volleyJson = new VolleyJson(coordJson);
     TakeShotsJson takeShotsJson = new TakeShotsJson(volleyJson);
-
     JsonNode jsonResponse = JsonUtils.serializeRecord(takeShotsJson);
-    this.out.println(jsonResponse);
+    MessageJson messageJson = new MessageJson("take-shots", jsonResponse);
+
+    JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
+    this.out.println(messageResponse);
   }
 
   private void parseCoordinateArguments(JsonNode coordinates, List<Coord> shots) {
@@ -178,6 +185,7 @@ public class ProxyController implements Controller {
     parseCoordinateArguments(coordinates, opponentShots);
 
     List<Coord> damage = player.reportDamage(opponentShots);
+
     CoordJson[] coordJsonArray = new CoordJson[damage.size()];
 
     formatShotsToCoordJsonArray(damage, coordJsonArray);
@@ -185,7 +193,10 @@ public class ProxyController implements Controller {
     ReportDamageJson reportDamageJson = new ReportDamageJson(volleyJson);
 
     JsonNode jsonResponse = JsonUtils.serializeRecord(reportDamageJson);
-    this.out.println(jsonResponse);
+    MessageJson messageJson = new MessageJson("report-damage", jsonResponse);
+
+    JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
+    this.out.println(messageResponse);
   }
 
   private void handleSuccessfulHits(JsonNode arguments) {

@@ -54,6 +54,6 @@ public class AutomatedPlayer extends AbstractPlayer {
    */
   @Override
   public void endGame(GameResult result, String reason) {
-    System.out.println("hi");
+    System.out.println("YOU HAVE " + result.toString() + "! " + reason);
   }
 }

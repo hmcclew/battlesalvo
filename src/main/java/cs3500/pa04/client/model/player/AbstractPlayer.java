@@ -222,6 +222,7 @@ public abstract class AbstractPlayer implements Player {
         shotsThatHitShips.add(shot);
       }
     }
+    updateRemainingShips(shotsThatHitShips);
     return shotsThatHitShips;
   }
 
