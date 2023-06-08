@@ -8,7 +8,13 @@ import java.util.List;
  */
 public interface Ship {
 
+  /**
+   * Getter method for the direction of a ship
+   *
+   * @return the orientation of this ship
+   */
   String getDirection();
+
   /**
    * Gets the size of a ship
    *

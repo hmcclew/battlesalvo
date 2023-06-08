@@ -14,6 +14,11 @@ public abstract class AbstractShip implements Ship {
   List<Coord> placement = new ArrayList<>();
   private String direction;
 
+  /**
+   * Getter method for the direction of a ship
+   *
+   * @return the direction of this ship
+   */
   public String getDirection() {
     return this.direction;
   }

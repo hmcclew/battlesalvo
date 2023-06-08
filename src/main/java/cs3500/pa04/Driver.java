@@ -12,6 +12,12 @@ import java.net.Socket;
  */
 public class Driver {
 
+  /**
+   * Runs a game battleSalvo by connecting to a given server
+   *
+   * @param host the host
+   * @param port the port
+   */
   public static void runClient(String host, int port) {
     try {
       Socket server = new Socket(host, port);

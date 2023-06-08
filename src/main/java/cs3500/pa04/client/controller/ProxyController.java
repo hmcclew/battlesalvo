@@ -31,7 +31,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Proxy Controller for game of BattleSalvo that communicates
+ * with the server
+ */
 public class ProxyController implements Controller {
   private final Socket server;
   private final InputStream in;
@@ -40,6 +43,13 @@ public class ProxyController implements Controller {
   private final ObjectMapper mapper;
   private BattleSalvoModel model;
 
+  /**
+   * Constructor for a proxycontroller
+   *
+   * @param server the server
+   * @param player the player playing
+   * @throws IOException if the
+   */
   public ProxyController(Socket server, Player player)
       throws IOException {
     this.server = server;
@@ -74,23 +84,17 @@ public class ProxyController implements Controller {
 
     if ("join".equals(name)) {
       handleJoin();
-    }
-    else if ("setup".equals(name)) {
+    } else if ("setup".equals(name)) {
       handleSetup(arguments);
-    }
-    else if ("take-shots".equals(name)) {
+    } else if ("take-shots".equals(name)) {
       handleTakeShots();
-    }
-    else if ("report-damage".equals(name)) {
+    } else if ("report-damage".equals(name)) {
       handleReportDamage(arguments);
-    }
-    else if ("successful-hits".equals(name)) {
+    } else if ("successful-hits".equals(name)) {
       handleSuccessfulHits(arguments);
-    }
-    else if ("end-game".equals(name)) {
+    } else if ("end-game".equals(name)) {
       handleEndGame(arguments);
-    }
-    else {
+    } else {
       throw new IllegalStateException("Invalid message name");
     }
   }
@@ -114,7 +118,7 @@ public class ProxyController implements Controller {
     }
   }
 
-  private void FormatAsShipJson(List<Ship> playerSetup, ShipJson[] shipJsonArray) {
+  private void formatAsShipJson(List<Ship> playerSetup, ShipJson[] shipJsonArray) {
     for (int i = 0; i < playerSetup.size(); i++) {
       Ship ship = playerSetup.get(i);
       int length = ship.getSize();
@@ -125,6 +129,7 @@ public class ProxyController implements Controller {
       shipJsonArray[i] = shipJson;
     }
   }
+
   private void handleSetup(JsonNode arguments) {
     int width = arguments.path("width").asInt();
     int height = arguments.path("height").asInt();
@@ -137,7 +142,7 @@ public class ProxyController implements Controller {
     List<Ship> playerSetup = player.setup(height, width, specifications);
     ShipJson[] shipJsonArray = new ShipJson[playerSetup.size()];
 
-    FormatAsShipJson(playerSetup, shipJsonArray);
+    formatAsShipJson(playerSetup, shipJsonArray);
 
     SetupJson setupJson = new SetupJson(shipJsonArray);
 
@@ -148,14 +153,23 @@ public class ProxyController implements Controller {
     this.out.println(messageResponse);
   }
 
+  /**
+   * Formates a list of coordinates into an array of coordinate jsons
+   *
+   * @param shots the list of coordinates to be converted to jsons
+   * @param coordJsonArray the array to be updated and filled
+   */
   private void formatShotsToCoordJsonArray(List<Coord> shots, CoordJson[] coordJsonArray) {
     for (int i = 0; i < shots.size(); i++) {
       Coord c = shots.get(i);
-      CoordJson cJson = new CoordJson(c.getX(), c.getY());
-      coordJsonArray[i] = cJson;
+      CoordJson coordJson = new CoordJson(c.getX(), c.getY());
+      coordJsonArray[i] = coordJson;
     }
   }
 
+  /**
+   * Handles the take-shot method request from the server
+   */
   private void handleTakeShots() {
     model.updateAllowedShots((AbstractPlayer) player);
     List<Coord> shotsTaken = model.getAutomatedFiredShots((AutomatedPlayer) player);
@@ -181,6 +195,7 @@ public class ProxyController implements Controller {
       shots.add(c);
     }
   }
+
   private void handleReportDamage(JsonNode arguments) {
     List<Coord> opponentShots = new ArrayList<>();
     JsonNode coordinates = arguments.path("coordinates");
@@ -213,13 +228,16 @@ public class ProxyController implements Controller {
   }
 
   private void handleEndGame(JsonNode arguments) {
-      String result = arguments.get("result").asText();
-      String reason = arguments.get("reason").asText();
-      GameResult gameResult = GameResult.valueOf(result.toUpperCase());
+    String result = arguments.get("result").asText();
+    String reason = arguments.get("reason").asText();
+    GameResult gameResult = GameResult.valueOf(result.toUpperCase());
 
-      player.endGame(gameResult, reason);
-      MessageJson messageJson = new MessageJson("end-game", mapper.createObjectNode());
-      this.out.println(JsonUtils.serializeRecord(messageJson));
+    player.endGame(gameResult, reason);
+    try {
+      server.close();
+    } catch (IOException e) {
+      System.err.println("Unable to close server");
+    }
   }
 
 }
