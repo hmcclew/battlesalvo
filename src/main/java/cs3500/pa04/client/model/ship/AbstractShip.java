@@ -10,9 +10,10 @@ import java.util.Random;
  * Abstract Class to represent a ship
  */
 public abstract class AbstractShip implements Ship {
-  protected Random random = new Random();
-  List<Coord> placement = new ArrayList<>();
+  private List<Coord> placement = new ArrayList<>();
   private String direction;
+  protected Random random = new Random();
+
 
   /**
    * Getter method for the direction of a ship
