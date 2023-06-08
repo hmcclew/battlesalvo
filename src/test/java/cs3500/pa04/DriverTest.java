@@ -28,4 +28,23 @@ class DriverTest {
     }
   }
 
+  @Test
+  public void testRunClientException() {
+    try {
+      throw new RuntimeException("Simulated unexpected error");
+    } catch (Exception e) {
+      ByteArrayOutputStream errStream = new ByteArrayOutputStream();
+      PrintStream originalErr = System.err;
+      System.setErr(new PrintStream(errStream));
+
+      String arr[] = {"0.0", "2840"};
+      driver.main(arr);
+
+      System.setErr(originalErr);
+
+      String expectedErrorMessage = "An Unexpected error occurred";
+      assertTrue(errStream.toString().contains(expectedErrorMessage));
+    }
+  }
+
 }
