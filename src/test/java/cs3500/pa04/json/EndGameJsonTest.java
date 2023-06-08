@@ -1,6 +1,7 @@
 package cs3500.pa04.json;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import cs3500.pa04.client.model.GameResult;
 import org.junit.jupiter.api.Test;

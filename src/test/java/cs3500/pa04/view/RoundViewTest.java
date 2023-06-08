@@ -52,15 +52,15 @@ class RoundViewTest {
         +
         " 0  0  0  0  0  0 \n"
         +
-        " 0  M  0  0  0  0 \n"
+        " 0  0  0  0  0  0 \n"
+        +
+        " 0  0  M  0  0  0 \n"
         +
         " 0  0  0  0  0  0 \n"
         +
         " 0  0  0  0  0  0 \n"
         +
-        " 0  0  H  0  0  0 \n"
-        +
-        " 0  0  0  0  0  0 \n\n";
+        " 0  0  0  H  0  0 \n\n";
     assertEquals(expectedOutput, outputStreamCaptor.toString());
   }
 
@@ -71,15 +71,15 @@ class RoundViewTest {
         +
         " 0  0  0  0  0  0 \n"
         +
-        " 0  M  0  0  0  0 \n"
+        " 0  0  0  0  0  0 \n"
+        +
+        " 0  0  M  0  0  0 \n"
         +
         " 0  0  0  0  0  0 \n"
         +
         " 0  0  0  0  0  0 \n"
         +
-        " 0  0  H  0  0  0 \n"
-        +
-        " 0  0  S  0  0  0 \n\n";
+        " 0  0  0  H  0  0 \n\n";
     assertEquals(expectedOutput, outputStreamCaptor.toString());
   }
 

@@ -1,6 +1,7 @@
 package cs3500.pa04.json;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ class ShipJsonTest {
    */
   @Test
   public void testShipJson() {
-    CoordJson coordJson = new CoordJson(4,5);
+    CoordJson coordJson = new CoordJson(4, 5);
     ShipJson shipJson = new ShipJson(coordJson, 5, "VERTICAL");
 
     assertNotNull(shipJson);

@@ -68,8 +68,8 @@ public class RoundView implements View {
    */
   public void printOpponentBoard(List<Coord> opponentShipCoordinates, List<Coord> alreadyShot) {
     System.out.println("Opponent Board Data: ");
-    for (int i = 1; i <= boardSizeY; i++) {
-      for (int j = 1; j <= boardSizeX; j++) {
+    for (int i = 0; i < boardSizeY; i++) {
+      for (int j = 0; j < boardSizeX; j++) {
         Coord currentCoord = new BattleSalvoCoord(j, i);
         if (opponentShipCoordinates.contains(currentCoord) && alreadyShot.contains(currentCoord)) {
           System.out.print(" H ");
@@ -92,8 +92,8 @@ public class RoundView implements View {
    */
   public void printUserBoard(List<Coord> userShipCoordinates, List<Coord> opponentShots) {
     System.out.println("Your Board: ");
-    for (int i = 1; i <= boardSizeY; i++) {
-      for (int j = 1; j <= boardSizeX; j++) {
+    for (int i = 0; i < boardSizeY; i++) {
+      for (int j = 0; j < boardSizeX; j++) {
         Coord currentCoord = new BattleSalvoCoord(j, i);
         if (userShipCoordinates.contains(currentCoord) && opponentShots.contains(currentCoord)) {
           System.out.print(" H ");
