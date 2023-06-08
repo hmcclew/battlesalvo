@@ -12,8 +12,6 @@ import java.util.Random;
  */
 public class AutomatedPlayer extends AbstractPlayer {
 
-  private int numShipShotsLeft = getShipOccupiedCoordinates().size();
-
 
   /**
    * Get the player's name.
@@ -50,44 +48,6 @@ public class AutomatedPlayer extends AbstractPlayer {
     }
     return firedShots;
   }
-
-  /*
-
-  /**
-   * Returns this player's shots on the opponent's board. The number of shots returned should
-   * equal the number of ships on this player's board that have not sunk.
-   *
-   * @return the locations of shots on the opponent's board
-   */
-  /*
-  @Override
-  public List<Coord> takeShots() {
-    List<Coord> firedShots = new ArrayList<>();
-    Random random = new Random();
-    int count = 0;
-    while (count < getAllowedShots()) {
-      Coord firedShot = new BattleSalvoCoord(0, 0);
-      if (numShipShotsLeft == 0) {
-        int x = random.nextInt(16);
-        int y = random.nextInt(16);
-        firedShot = new BattleSalvoCoord(x, y);
-        firedShots.add(firedShot);
-      } else {
-        Coord c = getShipOccupiedCoordinates().get(numShipShotsLeft - 1);
-        int x = c.getX();
-        int y = c.getY();
-        firedShot = new BattleSalvoCoord(x, y);
-        firedShots.add(firedShot);
-        numShipShotsLeft--;
-      }
-      if (!firedShots.contains(firedShot)) {
-        firedShots.add(firedShot);
-        count++;
-      }
-    }
-      return firedShots;
-    }
-    */
 
   /**
    * Notifies the player that the game is over.
