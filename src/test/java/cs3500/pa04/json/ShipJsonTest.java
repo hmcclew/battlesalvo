@@ -15,11 +15,11 @@ class ShipJsonTest {
   @Test
   public void testShipJson() {
     CoordJson coordJson = new CoordJson(4,5);
-    ShipJson shipJson = new ShipJson(coordJson, 5, "vertical");
+    ShipJson shipJson = new ShipJson(coordJson, 5, "VERTICAL");
 
     assertNotNull(shipJson);
     assertEquals(coordJson, shipJson.c());
     assertEquals(5, shipJson.length());
-    assertEquals("vertical", shipJson.direction());
+    assertEquals("VERTICAL", shipJson.direction());
   }
 }

@@ -15,11 +15,11 @@ class JoinJsonTest {
    */
   @Test
   public void testJoinJson() {
-    JoinJson joinJson = new JoinJson("Kevin", GameType.MULTI);
+    JoinJson joinJson = new JoinJson("Kevin", "SINGLE");
 
     assertNotNull(joinJson);
     assertEquals("Kevin", joinJson.name());
-    assertEquals(GameType.MULTI, joinJson.gameType());
+    assertEquals(GameType.SINGLE, GameType.valueOf(joinJson.gameType()));
   }
 
 }

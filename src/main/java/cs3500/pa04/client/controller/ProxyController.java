@@ -71,7 +71,7 @@ public class ProxyController implements Controller {
   private void delegateMessage(MessageJson message) {
     String name = message.methodName();
     JsonNode arguments = message.arguments();
-    System.out.println(name);
+
     if ("join".equals(name)) {
       handleJoin();
     }
@@ -170,6 +170,7 @@ public class ProxyController implements Controller {
 
     JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
     this.out.println(messageResponse);
+    System.out.println(messageResponse);
   }
 
   private void parseCoordinateArguments(JsonNode coordinates, List<Coord> shots) {

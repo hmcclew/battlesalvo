@@ -15,9 +15,9 @@ class EndGameJsonTest {
    */
   @Test
   public void testEndGameJson() {
-    EndGameJson endGameJson = new EndGameJson(GameResult.DRAW, "all battleships have sunk");
+    EndGameJson endGameJson = new EndGameJson("DRAW", "all battleships have sunk");
     assertNotNull(endGameJson);
-    assertEquals(GameResult.DRAW, endGameJson.gameResult());
+    assertEquals(GameResult.DRAW, GameResult.valueOf(endGameJson.result()));
     assertEquals("all battleships have sunk", endGameJson.reason());
   }
 }

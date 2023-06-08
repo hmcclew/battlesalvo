@@ -15,7 +15,7 @@ class FleetJsonTest {
   @Test
   public void testFleetJson() {
     CoordJson coordJson = new CoordJson(3, 6);
-    ShipJson shipJson = new ShipJson(coordJson, 5, "horizontal");
+    ShipJson shipJson = new ShipJson(coordJson, 5, "HORIZONTAL");
     ShipJson[] fleet = new ShipJson[]{shipJson};
     FleetJson fleetJson = new FleetJson(fleet);
     assertNotNull(fleetJson);

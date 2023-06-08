@@ -15,10 +15,10 @@ class SuccessfulHitsJsonTest {
   public void testSuccessfulHitsJson() {
     CoordJson coordJson = new CoordJson(7, 8);
     CoordJson[] coordJsons = new CoordJson[]{coordJson};
-    VolleyJson volleyJson = new VolleyJson(coordJsons);
+    SuccessfulHitsJson successfulHitsJson = new SuccessfulHitsJson(coordJsons);
 
     assertNotNull(coordJsons);
-    assertEquals(coordJsons, volleyJson.coordinates());
+    assertEquals(coordJsons, successfulHitsJson.coordinates());
   }
 
 }

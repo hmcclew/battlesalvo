@@ -16,10 +16,9 @@ class TakeShotsJsonTest {
   public void testTakeShotsJson() {
     CoordJson coordJson = new CoordJson(6, 7);
     CoordJson[] coordJsons = new CoordJson[]{coordJson};
-    VolleyJson volleyJson = new VolleyJson(coordJsons);
-    TakeShotsJson takeShotsJson = new TakeShotsJson(volleyJson);
+    TakeShotsJson takeShotsJson = new TakeShotsJson(coordJsons);
 
     assertNotNull(takeShotsJson);
-    assertEquals(volleyJson, takeShotsJson.coordinates());
+    assertEquals(coordJsons, takeShotsJson.coordinates());
   }
 }

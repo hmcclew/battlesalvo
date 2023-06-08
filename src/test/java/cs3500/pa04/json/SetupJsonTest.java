@@ -15,7 +15,7 @@ class SetupJsonTest {
   @Test
   public void testSetUpJson() {
     CoordJson coordJson = new CoordJson(4, 3);
-    ShipJson shipJson = new ShipJson(coordJson, 4, "vertical");
+    ShipJson shipJson = new ShipJson(coordJson, 4, "VERTICAL");
     ShipJson[] shipJsons = new ShipJson[]{shipJson};
     SetupJson setupJson = new SetupJson(shipJsons);
 
