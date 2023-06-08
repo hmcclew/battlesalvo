@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ProxyController implements Controller {
   private final Socket server;
@@ -51,15 +52,11 @@ public class ProxyController implements Controller {
   @Override
   public void run() {
     try {
-      JsonNode message = mapper.readTree(in);
-      String name = message.path("method-name").toString();
+      JsonNode message = Objects.requireNonNull(mapper.readTree(in));
+      String name = Objects.requireNonNull(message.path("method-name").toString());
       JsonNode arguments = message.path("arguments");
 
-      System.out.println("hi");
-      System.out.println("hi");
-
-      while (!this.server.isClosed()) {
-        System.out.println("hi");
+      while (this.server.isConnected()) {
         MessageJson messageJson = new MessageJson(name, arguments);
         delegateMessage(messageJson);
       }
@@ -72,22 +69,23 @@ public class ProxyController implements Controller {
   private void delegateMessage(MessageJson message) {
     String name = message.messageName();
     JsonNode arguments = message.arguments();
-    if ("join".equals(name)) {
+    if ("\"join\"".equals(name)) {
       handleJoin();
     }
-    else if ("setup".equals(name)) {
+    else if ("\"setup\"".equals(name)) {
+      System.out.println("hi2");
       handleSetup(arguments);
     }
-    else if ("take-shots".equals(name)) {
+    else if ("\"take-shots\"".equals(name)) {
       handleTakeShots();
     }
-    else if ("report-damage".equals(name)) {
+    else if ("\"report-damage\"".equals(name)) {
       handleReportDamage(arguments);
     }
-    else if ("successful-hits".equals(name)) {
+    else if ("\"successful-hits\"".equals(name)) {
       handleSuccessfulHits(arguments);
     }
-    else if ("end-game".equals(name)) {
+    else if ("\"end-game\"".equals(name)) {
       handleEndGame(arguments);
     }
     else {
@@ -96,7 +94,7 @@ public class ProxyController implements Controller {
   }
 
   private void handleJoin() {
-    JoinJson joinJson = new JoinJson("swiftiesunite", GameType.SINGLE);
+    JoinJson joinJson = new JoinJson("swiftiesunite", GameType.SINGLE.toString());
 
     JsonNode jsonResponse = JsonUtils.serializeRecord(joinJson);
     this.out.println(jsonResponse);

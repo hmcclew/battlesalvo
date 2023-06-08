@@ -7,7 +7,4 @@ public record ShipJson(
     @JsonProperty("length") int length,
     @JsonProperty("direction") String direction) {
 
-  public boolean isVertical() {
-    return false;
-  }
 }

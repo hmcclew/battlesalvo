@@ -17,6 +17,7 @@ public class Driver {
       Socket server = new Socket(host, port);
       ProxyController proxyController = new ProxyController(server,
           new AutomatedPlayer());
+      System.out.println("Connecting to Server...");
       proxyController.run();
     } catch (IOException e) {
       System.err.println("An Unexpected error occurred");
