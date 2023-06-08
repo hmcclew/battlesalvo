@@ -3,15 +3,18 @@ package cs3500.pa04.client.controller;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cs3500.pa04.client.model.BattleSalvoModel;
 import cs3500.pa04.client.model.GameResult;
 import cs3500.pa04.client.model.GameType;
 import cs3500.pa04.client.model.coordinate.BattleSalvoCoord;
 import cs3500.pa04.client.model.coordinate.Coord;
+import cs3500.pa04.client.model.player.AbstractPlayer;
 import cs3500.pa04.client.model.player.AutomatedPlayer;
 import cs3500.pa04.client.model.player.Player;
 import cs3500.pa04.client.model.ship.Ship;
 import cs3500.pa04.client.model.ship.ShipType;
 import cs3500.pa04.json.CoordJson;
+import cs3500.pa04.json.EndGameJson;
 import cs3500.pa04.json.JoinJson;
 import cs3500.pa04.json.JsonUtils;
 import cs3500.pa04.json.MessageJson;
@@ -37,6 +40,7 @@ public class ProxyController implements Controller {
   private final PrintStream out;
   private final Player player;
   private final ObjectMapper mapper;
+  private BattleSalvoModel model;
 
   public ProxyController(Socket server, Player player)
       throws IOException {
@@ -69,7 +73,7 @@ public class ProxyController implements Controller {
   private void delegateMessage(MessageJson message) {
     String name = message.methodName();
     JsonNode arguments = message.arguments();
-    System.out.println(name);
+    System.out.println(message);
     if ("join".equals(name)) {
       handleJoin();
     }
@@ -131,8 +135,8 @@ public class ProxyController implements Controller {
     Map<ShipType, Integer> specifications = new HashMap<>();
 
     parseSpecifications(iterator, specifications);
-
-    List<Ship> playerSetup = player.setup(width, height, specifications);
+    model = new BattleSalvoModel(width, height, specifications);
+    List<Ship> playerSetup = player.setup(height, width, specifications);
     ShipJson[] shipJsonArray = new ShipJson[playerSetup.size()];
 
     FormatAsShipJson(playerSetup, shipJsonArray);
@@ -155,19 +159,20 @@ public class ProxyController implements Controller {
   }
 
   private void handleTakeShots() {
-    List<Coord> shotsTaken = player.takeShots();
+    model.updateAllowedShots((AbstractPlayer) player);
+    List<Coord> shotsTaken = model.getAutomatedFiredShots((AutomatedPlayer) player);
 
     CoordJson[] coordJson = new CoordJson[shotsTaken.size()];
 
     formatShotsToCoordJsonArray(shotsTaken, coordJson);
 
-    VolleyJson volleyJson = new VolleyJson(coordJson);
-    TakeShotsJson takeShotsJson = new TakeShotsJson(volleyJson);
+    TakeShotsJson takeShotsJson = new TakeShotsJson(coordJson);
     JsonNode jsonResponse = JsonUtils.serializeRecord(takeShotsJson);
     MessageJson messageJson = new MessageJson("take-shots", jsonResponse);
 
     JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
     this.out.println(messageResponse);
+    System.out.println(messageResponse);
   }
 
   private void parseCoordinateArguments(JsonNode coordinates, List<Coord> shots) {
@@ -189,14 +194,14 @@ public class ProxyController implements Controller {
     CoordJson[] coordJsonArray = new CoordJson[damage.size()];
 
     formatShotsToCoordJsonArray(damage, coordJsonArray);
-    VolleyJson volleyJson = new VolleyJson(coordJsonArray);
-    ReportDamageJson reportDamageJson = new ReportDamageJson(volleyJson);
+    ReportDamageJson reportDamageJson = new ReportDamageJson(coordJsonArray);
 
     JsonNode jsonResponse = JsonUtils.serializeRecord(reportDamageJson);
     MessageJson messageJson = new MessageJson("report-damage", jsonResponse);
 
     JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
     this.out.println(messageResponse);
+    System.out.println(messageResponse);
   }
 
   private void handleSuccessfulHits(JsonNode arguments) {
@@ -209,12 +214,13 @@ public class ProxyController implements Controller {
   }
 
   private void handleEndGame(JsonNode arguments) {
-    String result = arguments.path("result").toString();
-    GameResult gameResult = GameResult.valueOf(result.toUpperCase());
+      String result = arguments.get("result").asText();
+      String reason = arguments.get("reason").asText();
+      GameResult gameResult = GameResult.valueOf(result.toUpperCase());
 
-    String reason = arguments.path("reason").toString();
-
-    player.endGame(gameResult, reason);
+      player.endGame(gameResult, reason);
+      MessageJson messageJson = new MessageJson("end-game", mapper.createObjectNode());
+      this.out.println(JsonUtils.serializeRecord(messageJson));
   }
 
 }

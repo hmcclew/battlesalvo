@@ -131,7 +131,7 @@ public class BattleSalvoModel {
    *
    * @param player the player who's allowed shots are being updated
    */
-  private void updateAllowedShots(AbstractPlayer player) {
+  public void updateAllowedShots(AbstractPlayer player) {
     int openCoordinates = (boardSizeX * boardSizeY) - player.getAlreadyShot().size();
     int allowedShots = Math.min(player.getNumRemainingShips(), openCoordinates);
     player.setAllowedShots(allowedShots);
