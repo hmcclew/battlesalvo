@@ -147,9 +147,10 @@ public class BattleSalvoModel {
   public boolean validCoordinates(List<Coord> firedShots, AbstractPlayer player) {
     boolean validShot = true;
     for (Coord shot : firedShots) {
-      if (shot.getX() <= 0 || shot.getY() <= 0 || shot.getX() > boardSizeX
+      // swapped equals
+      if (shot.getX() < 0 || shot.getY() < 0 || shot.getX() >= boardSizeX
           ||
-          shot.getY() > boardSizeY || player.getAlreadyShot().contains(shot)) {
+          shot.getY() >= boardSizeY || player.getAlreadyShot().contains(shot)) {
         validShot = false;
       }
     }

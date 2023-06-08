@@ -34,8 +34,9 @@ public abstract class AbstractShip implements Ship {
    * @return the generated Coordinate
    */
   private Coord getRandomCoordinate(int height, int width) {
-    int x = random.nextInt(width + 1);
-    int y = random.nextInt(height + 1);
+    // + 1
+    int x = random.nextInt(width);
+    int y = random.nextInt(height);
     return new BattleSalvoCoord(x, y);
   }
 

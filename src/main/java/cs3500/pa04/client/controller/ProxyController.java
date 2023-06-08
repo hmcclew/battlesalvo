@@ -14,7 +14,6 @@ import cs3500.pa04.client.model.player.Player;
 import cs3500.pa04.client.model.ship.Ship;
 import cs3500.pa04.client.model.ship.ShipType;
 import cs3500.pa04.json.CoordJson;
-import cs3500.pa04.json.EndGameJson;
 import cs3500.pa04.json.JoinJson;
 import cs3500.pa04.json.JsonUtils;
 import cs3500.pa04.json.MessageJson;
@@ -22,7 +21,6 @@ import cs3500.pa04.json.ReportDamageJson;
 import cs3500.pa04.json.SetupJson;
 import cs3500.pa04.json.ShipJson;
 import cs3500.pa04.json.TakeShotsJson;
-import cs3500.pa04.json.VolleyJson;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -73,7 +71,7 @@ public class ProxyController implements Controller {
   private void delegateMessage(MessageJson message) {
     String name = message.methodName();
     JsonNode arguments = message.arguments();
-    System.out.println(message);
+    System.out.println(name);
     if ("join".equals(name)) {
       handleJoin();
     }
@@ -121,7 +119,7 @@ public class ProxyController implements Controller {
       Ship ship = playerSetup.get(i);
       int length = ship.getSize();
       String direction = ship.getDirection();
-      Coord startCoord = ship.getPlacement().get(0);
+      Coord startCoord = ship.getPlacement().get(length - 1);
       CoordJson coordJson = new CoordJson(startCoord.getX(), startCoord.getY());
       ShipJson shipJson = new ShipJson(coordJson, length, direction);
       shipJsonArray[i] = shipJson;
@@ -172,7 +170,6 @@ public class ProxyController implements Controller {
 
     JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
     this.out.println(messageResponse);
-    System.out.println(messageResponse);
   }
 
   private void parseCoordinateArguments(JsonNode coordinates, List<Coord> shots) {
@@ -201,7 +198,6 @@ public class ProxyController implements Controller {
 
     JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
     this.out.println(messageResponse);
-    System.out.println(messageResponse);
   }
 
   private void handleSuccessfulHits(JsonNode arguments) {
@@ -211,6 +207,8 @@ public class ProxyController implements Controller {
     parseCoordinateArguments(coordinates, successfulShots);
 
     player.successfulHits(successfulShots);
+    MessageJson messageJson = new MessageJson("successful-hits", mapper.createObjectNode());
+    this.out.println(JsonUtils.serializeRecord(messageJson));
   }
 
   private void handleEndGame(JsonNode arguments) {

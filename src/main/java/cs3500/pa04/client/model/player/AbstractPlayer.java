@@ -182,8 +182,8 @@ public abstract class AbstractPlayer implements Player {
   private boolean outOfBoundsPlacement(int height, int width, List<Coord> placement) {
     boolean outOfBounds = false;
     for (Coord coord : placement) {
-      if (coord.getX() > width || coord.getY() > height
-          || coord.getY() <= 0 || coord.getX() <= 0) {
+      if (coord.getX() >= width || coord.getY() >= height
+          || coord.getY() < 0 || coord.getX() < 0) {
         outOfBounds = true;
       }
     }
