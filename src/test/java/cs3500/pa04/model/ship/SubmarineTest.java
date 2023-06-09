@@ -1,4 +1,4 @@
-package cs3500.pa04.client.model.ship;
+package cs3500.pa04.model.ship;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

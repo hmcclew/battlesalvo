@@ -1,4 +1,4 @@
-package cs3500.pa04.client.view;
+package cs3500.pa04.view;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
