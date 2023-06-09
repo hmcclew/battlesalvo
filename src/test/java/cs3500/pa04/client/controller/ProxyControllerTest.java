@@ -48,7 +48,6 @@ class ProxyControllerTest {
     mockSocket.close();
   }
 
-
   @Test
   public void testHandleJoin() throws IOException {
     String serverMessage = "{\"method-name\":\"join\",\"arguments\":{}}";
