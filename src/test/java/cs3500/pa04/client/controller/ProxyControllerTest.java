@@ -21,7 +21,6 @@ import java.net.Socket;
 import org.junit.jupiter.api.Test;
 
 class ProxyControllerTest {
-
   Socket mockSocket = mock(Socket.class);
   Player mockPlayer = mock(Player.class);
 
