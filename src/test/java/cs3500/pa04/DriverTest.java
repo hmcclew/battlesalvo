@@ -12,7 +12,7 @@ class DriverTest {
   Driver driver = new Driver();
 
   @Test
-  public void testMainException() {
+  public void testMainExceptionNoArgs() {
     try {
       throw new RuntimeException("Simulated unexpected error");
     } catch (Exception e) {
@@ -25,6 +25,25 @@ class DriverTest {
       System.setErr(originalErr);
 
       String expectedErrorMessage = "An Unexpected Error Occurred. Please Try Again.";
+      assertTrue(errStream.toString().contains(expectedErrorMessage));
+    }
+  }
+
+  @Test
+  public void testMainExceptionTwoArgs() {
+    try {
+      throw new RuntimeException("Simulated unexpected error");
+    } catch (Exception e) {
+      ByteArrayOutputStream errStream = new ByteArrayOutputStream();
+      PrintStream originalErr = System.err;
+      System.setErr(new PrintStream(errStream));
+
+      String[] args = new String[] {"0.0", "blue"};
+      driver.main(args);
+
+      System.setErr(originalErr);
+
+      String expectedErrorMessage = "Please ensure the host and port are correct";
       assertTrue(errStream.toString().contains(expectedErrorMessage));
     }
   }
