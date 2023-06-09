@@ -208,7 +208,6 @@ public class ProxyController implements Controller {
 
     JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
     this.out.println(messageResponse);
-    System.out.println(messageResponse);
   }
 
   /**
