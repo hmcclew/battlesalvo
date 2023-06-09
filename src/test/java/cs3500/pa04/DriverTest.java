@@ -1,6 +1,7 @@
 package cs3500.pa04;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -37,14 +38,20 @@ class DriverTest {
       PrintStream originalErr = System.err;
       System.setErr(new PrintStream(errStream));
 
-      String arr[] = {"0.0", "2840"};
-      driver.main(arr);
+      String[] args = new String[] {"0.0", "2840"};
+      driver.main(args);
 
       System.setErr(originalErr);
 
       String expectedErrorMessage = "An Unexpected error occurred";
       assertTrue(errStream.toString().contains(expectedErrorMessage));
     }
+  }
+
+  @Test
+  public void testInvalidCommandLineArgs() {
+    String[] args = {"arg1", "arg2", "arg3"};
+    assertThrows(IndexOutOfBoundsException.class, () -> Driver.main(args));
   }
 
 }
