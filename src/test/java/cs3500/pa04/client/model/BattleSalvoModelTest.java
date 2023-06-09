@@ -1,11 +1,10 @@
-package cs3500.pa04.model;
+package cs3500.pa04.client.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import cs3500.pa04.client.controller.BattleSalvoController;
-import cs3500.pa04.client.model.BattleSalvoModel;
+import cs3500.pa04.client.BattleSalvoController;
 import cs3500.pa04.client.model.player.AutomatedPlayer;
 import cs3500.pa04.client.model.player.ManualPlayer;
 import cs3500.pa04.client.model.ship.ShipType;

@@ -1,4 +1,4 @@
-package cs3500.pa04.model.coordinate;
+package cs3500.pa04.client.model.coordinate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

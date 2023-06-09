@@ -1,4 +1,4 @@
-package cs3500.pa04.model.player;
+package cs3500.pa04.client.model.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

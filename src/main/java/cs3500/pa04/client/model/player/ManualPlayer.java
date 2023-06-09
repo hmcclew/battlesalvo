@@ -1,6 +1,6 @@
 package cs3500.pa04.client.model.player;
 
-import cs3500.pa04.client.controller.BattleSalvoController;
+import cs3500.pa04.client.BattleSalvoController;
 import cs3500.pa04.client.model.GameResult;
 import cs3500.pa04.client.model.coordinate.Coord;
 import java.util.List;

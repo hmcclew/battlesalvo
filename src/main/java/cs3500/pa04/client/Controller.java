@@ -1,4 +1,4 @@
-package cs3500.pa04.client.controller;
+package cs3500.pa04.client;
 
 /**
  * Interface to represent a Game Controller
