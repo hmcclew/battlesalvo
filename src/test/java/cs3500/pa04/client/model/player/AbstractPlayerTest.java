@@ -1,12 +1,10 @@
-package cs3500.pa04.model.player;
+package cs3500.pa04.client.model.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cs3500.pa04.client.controller.BattleSalvoController;
+import cs3500.pa04.client.BattleSalvoController;
 import cs3500.pa04.client.model.coordinate.BattleSalvoCoord;
 import cs3500.pa04.client.model.coordinate.Coord;
-import cs3500.pa04.client.model.player.AbstractPlayer;
-import cs3500.pa04.client.model.player.ManualPlayer;
 import cs3500.pa04.client.model.ship.ShipType;
 import java.util.ArrayList;
 import java.util.Arrays;

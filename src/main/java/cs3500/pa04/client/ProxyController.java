@@ -1,4 +1,4 @@
-package cs3500.pa04.client.controller;
+package cs3500.pa04.client;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import cs3500.pa04.client.ProxyController;
 import cs3500.pa04.client.model.player.Player;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

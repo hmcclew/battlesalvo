@@ -1,40 +1,39 @@
-package cs3500.pa04.view;
+package cs3500.pa04.client.view;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cs3500.pa04.client.view.DimensionSetupView;
+import cs3500.pa04.client.view.ShipSetupView;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class DimensionSetupViewTest {
+class ShipSetupViewTest {
 
-  private DimensionSetupView dimensionSetupView;
+  private ShipSetupView shipSetupView = new ShipSetupView(7);
 
   private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
   @BeforeEach
   public void setUp() {
-    dimensionSetupView = new DimensionSetupView();
     System.setOut(new PrintStream(outputStreamCaptor));
     System.setOut(System.out);
   }
 
   @Test
   public void testDisplay() {
-    dimensionSetupView.display();
-    String expectedOutput = "Hello! Welcome to the BattleSalvo Game\n"
-        + "Please enter a valid height and width below: \n";
+    shipSetupView.display();
+    String expectedOutput = "Please enter your fleet in the order [Carrier, Battleship, "
+        + "Destroyer, Submarine].\nRemember, your fleet may not exceed size 7.\n";
     assertEquals(expectedOutput, outputStreamCaptor.toString());
   }
 
   @Test
   public void testHandleInvalidInput() {
-    dimensionSetupView.handleInvalidInput();
-    String expectedOutput = "Uh Oh! You've entered invalid dimensions.\n"
-        + "Please remember that height and width must be in the range (6, 15), inclusive. "
-        + "Try again!\n";
+    shipSetupView.handleInvalidInput();
+    String expectedOutput = "Uh Oh! You've entered invalid fleet sizes.\n"
+        + "Please enter your fleet in order [Carrier, Battleship, "
+        + "Destroyer, Submarine].\nRemember, your fleet may not exceed size 7.\n";
     assertEquals(expectedOutput, outputStreamCaptor.toString());
   }
 }
