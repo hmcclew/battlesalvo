@@ -1,6 +1,5 @@
 package cs3500.pa04.client.controller;
 
-import cs3500.pa04.client.BattleSalvoController;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

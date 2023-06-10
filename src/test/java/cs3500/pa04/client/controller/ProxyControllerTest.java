@@ -12,17 +12,22 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import cs3500.pa04.client.ProxyController;
-import cs3500.pa04.client.model.player.Player;
+import cs3500.pa04.client.model.BattleSalvoModel;
+import cs3500.pa04.client.model.player.AutomatedPlayer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests the Proxy Controller
+ */
 class ProxyControllerTest {
   Socket mockSocket = mock(Socket.class);
-  Player mockPlayer = mock(Player.class);
+  AutomatedPlayer mockPlayer = mock(AutomatedPlayer.class);
+  ByteArrayOutputStream serverOutputStream = new ByteArrayOutputStream();
 
   @Test
   public void testRun() throws IOException {
@@ -30,10 +35,6 @@ class ProxyControllerTest {
         +
         "\"reason\":\"You win\"}}";
     ByteArrayInputStream serverInputStream = new ByteArrayInputStream(serverMessage.getBytes());
-    ByteArrayOutputStream serverOutputStream = new ByteArrayOutputStream();
-
-    Socket mockSocket = mock(Socket.class);
-    Player mockPlayer = mock(Player.class);
 
     when(mockSocket.getInputStream()).thenReturn(serverInputStream);
     when(mockSocket.getOutputStream()).thenReturn(serverOutputStream);
@@ -44,7 +45,13 @@ class ProxyControllerTest {
     verify(mockSocket, times(1)).getInputStream();
     verify(mockSocket, times(1)).getOutputStream();
     verify(mockPlayer, times(1)).endGame(any(), anyString());
-    mockSocket.close();
+  }
+
+  @Test
+  public void testHandleTakeShots() throws IOException {
+    String serverMessage = "{\"method-name\":\"take-shots\",\"arguments\":{}}";
+    testProxyController(serverMessage);
+    verify(mockPlayer, times(1)).takeShots();
   }
 
   @Test
@@ -61,22 +68,17 @@ class ProxyControllerTest {
 
   @Test
   public void testHandleSetup() throws IOException {
-    String serverMessage = "{\"method-name\":\"setup\",\"arguments\":{\"width\":5,\"height\":5,\"" +
-        "fleet-spec\":{\"BATTLESHIP\":1}}}";
+    String serverMessage = "{\"method-name\":\"setup\",\"arguments\":{\"width\":7,\"height\":7,\""
+        +
+        "fleet-spec\":{\"BATTLESHIP\":1, \"DESTROYER\":1, \"CARRIER\":1, \"SUBMARINE\":1}}}";
     testProxyController(serverMessage);
     verify(mockPlayer, times(1)).setup(anyInt(), anyInt(), anyMap());
   }
 
   @Test
-  public void testHandleTakeShots() throws IOException {
-    String serverMessage = "{\"method-name\":\"take-shots\",\"arguments\":{}}";
-    testProxyController(serverMessage);
-    verify(mockPlayer, times(1)).takeShots();
-  }
-
-  @Test
   public void testHandleReportDamage() throws IOException {
-    String serverMessage = "{\"method-name\":\"report-damage\",\"arguments\":" +
+    String serverMessage = "{\"method-name\":\"report-damage\",\"arguments\":"
+        +
         "{\"coordinates\":[{\"x\":1,\"y\":2}]}}";
     testProxyController(serverMessage);
     verify(mockPlayer, times(1)).reportDamage(anyList());
@@ -84,7 +86,8 @@ class ProxyControllerTest {
 
   @Test
   public void testHandleSuccessfulHits() throws IOException {
-    String serverMessage = "{\"method-name\":\"successful-hits\",\"arguments\":{\"coordinates\":" +
+    String serverMessage = "{\"method-name\":\"successful-hits\",\"arguments\":{\"coordinates\":"
+        +
         "[{\"x\":1,\"y\":2}]}}";
     testProxyController(serverMessage);
     verify(mockPlayer, times(1)).successfulHits(anyList());
@@ -92,15 +95,12 @@ class ProxyControllerTest {
 
   private void testProxyController(String serverMessage) throws IOException {
     ByteArrayInputStream serverInputStream = new ByteArrayInputStream(serverMessage.getBytes());
-    ByteArrayOutputStream serverOutputStream = new ByteArrayOutputStream();
-
-    Socket mockSocket = mock(Socket.class);
-    Player mockPlayer = mock(Player.class);
 
     when(mockSocket.getInputStream()).thenReturn(serverInputStream);
     when(mockSocket.getOutputStream()).thenReturn(serverOutputStream);
 
     ProxyController controller = new ProxyController(mockSocket, mockPlayer);
+    controller.model = new BattleSalvoModel(7, 7, new HashMap<>());
     controller.run();
 
     verify(mockSocket, times(1)).getInputStream();

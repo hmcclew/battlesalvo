@@ -1,8 +1,9 @@
-package cs3500.pa04.client;
+package cs3500.pa04.client.controller;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cs3500.pa04.client.controller.Controller;
 import cs3500.pa04.client.model.BattleSalvoModel;
 import cs3500.pa04.client.model.GameResult;
 import cs3500.pa04.client.model.GameType;
@@ -41,7 +42,7 @@ public class ProxyController implements Controller {
   private final PrintStream out;
   private final Player player;
   private final ObjectMapper mapper;
-  private BattleSalvoModel model;
+  protected BattleSalvoModel model;
 
   /**
    * Constructor for a proxycontroller

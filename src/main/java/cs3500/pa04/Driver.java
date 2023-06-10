@@ -1,7 +1,7 @@
 package cs3500.pa04;
 
-import cs3500.pa04.client.BattleSalvoController;
-import cs3500.pa04.client.ProxyController;
+import cs3500.pa04.client.controller.BattleSalvoController;
+import cs3500.pa04.client.controller.ProxyController;
 import cs3500.pa04.client.model.player.AutomatedPlayer;
 import java.io.IOException;
 import java.net.Socket;

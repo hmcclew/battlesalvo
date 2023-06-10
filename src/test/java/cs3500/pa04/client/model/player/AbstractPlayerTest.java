@@ -2,7 +2,7 @@ package cs3500.pa04.client.model.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cs3500.pa04.client.BattleSalvoController;
+import cs3500.pa04.client.controller.BattleSalvoController;
 import cs3500.pa04.client.model.coordinate.BattleSalvoCoord;
 import cs3500.pa04.client.model.coordinate.Coord;
 import cs3500.pa04.client.model.ship.ShipType;
