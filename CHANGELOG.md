@@ -4,3 +4,6 @@ all relevant methods (including displays for Pa03)
 in the model for this
 - Added a getter method for the orientation of a ship in the ship interface and abstract class
 - All relevant tests for pa03 were updated with these changes in place
+- added a getter method for the board sizes in the abstract player class, and updated the 
+take shots method in automated player to generate a random coordinate between those bounds instead
+of through 16
