@@ -12,7 +12,7 @@ class AutomatedPlayerTest {
 
   @Test
   public void testName() {
-    assertEquals("AI Player", player.name());
+    assertEquals("swiftiesunite", player.name());
   }
 
   @Test

@@ -20,7 +20,7 @@ public class AutomatedPlayer extends AbstractPlayer {
    */
   @Override
   public String name() {
-    return "AI Player";
+    return "swiftiesunite";
   }
 
 
