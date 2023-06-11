@@ -273,6 +273,10 @@ public class ProxyController implements Controller {
     String reason = arguments.get("reason").asText();
     GameResult gameResult = GameResult.valueOf(result.toUpperCase());
 
+    MessageJson messageJson = new MessageJson("end-game",
+        mapper.createObjectNode());
+    this.out.println(JsonUtils.serializeRecord(messageJson));
+
     player.endGame(gameResult, reason);
     try {
       server.close();
