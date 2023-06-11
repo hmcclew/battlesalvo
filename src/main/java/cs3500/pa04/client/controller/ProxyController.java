@@ -108,7 +108,7 @@ public class ProxyController implements Controller {
    * Handles the join method request from the server
    */
   private void handleJoin() {
-    JoinJson joinJson = new JoinJson(player.name(), GameType.SINGLE.toString());
+    JoinJson joinJson = new JoinJson("swiftiesunite", GameType.SINGLE.toString());
     JsonNode jsonResponse = JsonUtils.serializeRecord(joinJson);
     MessageJson messageJson = new MessageJson("join", jsonResponse);
 
