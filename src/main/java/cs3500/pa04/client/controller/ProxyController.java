@@ -41,6 +41,8 @@ public class ProxyController implements Controller {
   private final PrintStream out;
   private final Player player;
   private final ObjectMapper mapper;
+  private boolean isClosed;
+
   protected BattleSalvoModel model;
 
   /**
@@ -57,6 +59,7 @@ public class ProxyController implements Controller {
     this.out = new PrintStream(server.getOutputStream());
     this.player = player;
     this.mapper = new ObjectMapper();
+    this.isClosed = false;
   }
 
   /**
@@ -67,7 +70,7 @@ public class ProxyController implements Controller {
     try {
       JsonParser parser = this.mapper.getFactory().createParser(this.in);
 
-      while (!this.server.isClosed()) {
+      while (!isClosed) {
         MessageJson message = parser.readValueAs(MessageJson.class);
         delegateMessage(message);
       }
@@ -273,6 +276,7 @@ public class ProxyController implements Controller {
     player.endGame(gameResult, reason);
     try {
       server.close();
+      isClosed = true;
     } catch (IOException e) {
       System.err.println("Unable to close server");
     }

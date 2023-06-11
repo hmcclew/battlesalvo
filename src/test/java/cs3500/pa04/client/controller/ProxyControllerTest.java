@@ -28,27 +28,30 @@ class ProxyControllerTest {
   Socket mockSocket = mock(Socket.class);
   AutomatedPlayer mockPlayer = mock(AutomatedPlayer.class);
   ByteArrayOutputStream serverOutputStream = new ByteArrayOutputStream();
+  String serverMessage2 = "{\"method-name\":\"end-game\",\"arguments\":{\"result\":\"WIN\","
+      +
+      "\"reason\":\"You win\"}}";
 
   @Test
   public void testHandleEndGame() {
-    String serverMessage = "{\"method-name\":\"end-game\",\"arguments\":{\"result\":\"WIN\","
-        +
-        "\"reason\":\"You win\"}}";
-    testProxyController(serverMessage);
+    testProxyController(serverMessage2);
 
     verify(mockPlayer, times(1)).endGame(any(), anyString());
+
   }
 
   @Test
   public void testHandleTakeShots() {
     String serverMessage = "{\"method-name\":\"take-shots\",\"arguments\":{}}";
-    testProxyController(serverMessage);
+
+    testProxyController(serverMessage + serverMessage2);
     verify(mockPlayer, times(1)).takeShots();
   }
 
   @Test
   public void testHandleJoin() {
     String serverMessage = "{\"method-name\":\"join\",\"arguments\":{}}";
+
     testProxyController(serverMessage);
     verify(mockPlayer, never()).setup(anyInt(), anyInt(), anyMap());
     verify(mockPlayer, never()).takeShots();
@@ -64,7 +67,7 @@ class ProxyControllerTest {
         +
         "fleet-spec\":{\"BATTLESHIP\":1, \"DESTROYER\":1, \"CARRIER\":1, \"SUBMARINE\":1}}}";
 
-    testProxyController(serverMessage);
+    testProxyController(serverMessage + serverMessage2);
     verify(mockPlayer, times(1)).setup(anyInt(), anyInt(), anyMap());
   }
 
@@ -74,7 +77,7 @@ class ProxyControllerTest {
         +
         "{\"coordinates\":[{\"x\":1,\"y\":2}]}}";
 
-    testProxyController(serverMessage);
+    testProxyController(serverMessage + serverMessage2);
     verify(mockPlayer, times(1)).reportDamage(anyList());
   }
 
@@ -83,7 +86,8 @@ class ProxyControllerTest {
     String serverMessage = "{\"method-name\":\"successful-hits\",\"arguments\":{\"coordinates\":"
         +
         "[{\"x\":1,\"y\":2}]}}";
-    testProxyController(serverMessage);
+
+    testProxyController(serverMessage + serverMessage2);
     verify(mockPlayer, times(1)).successfulHits(anyList());
   }
 
@@ -94,18 +98,16 @@ class ProxyControllerTest {
       when(mockSocket.getInputStream()).thenReturn(serverInputStream);
       when(mockSocket.getOutputStream()).thenReturn(serverOutputStream);
 
+
       ProxyController controller = new ProxyController(mockSocket, mockPlayer);
       controller.model = new BattleSalvoModel(7, 7, new HashMap<>());
       controller.run();
 
       verify(mockSocket, times(1)).getInputStream();
       verify(mockSocket, times(1)).getOutputStream();
-
-      serverInputStream.close();
-      serverOutputStream.close();
-      mockSocket.close();
     } catch (IOException e) {
       System.err.println(e.getMessage());
     }
+
   }
 }
