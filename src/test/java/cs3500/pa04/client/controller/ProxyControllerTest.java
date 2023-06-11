@@ -30,32 +30,24 @@ class ProxyControllerTest {
   ByteArrayOutputStream serverOutputStream = new ByteArrayOutputStream();
 
   @Test
-  public void testRun() throws IOException {
+  public void testHandleEndGame() {
     String serverMessage = "{\"method-name\":\"end-game\",\"arguments\":{\"result\":\"WIN\","
         +
         "\"reason\":\"You win\"}}";
-    ByteArrayInputStream serverInputStream = new ByteArrayInputStream(serverMessage.getBytes());
+    testProxyController(serverMessage);
 
-    when(mockSocket.getInputStream()).thenReturn(serverInputStream);
-    when(mockSocket.getOutputStream()).thenReturn(serverOutputStream);
-
-    ProxyController controller = new ProxyController(mockSocket, mockPlayer);
-    controller.run();
-
-    verify(mockSocket, times(1)).getInputStream();
-    verify(mockSocket, times(1)).getOutputStream();
     verify(mockPlayer, times(1)).endGame(any(), anyString());
   }
 
   @Test
-  public void testHandleTakeShots() throws IOException {
+  public void testHandleTakeShots() {
     String serverMessage = "{\"method-name\":\"take-shots\",\"arguments\":{}}";
     testProxyController(serverMessage);
     verify(mockPlayer, times(1)).takeShots();
   }
 
   @Test
-  public void testHandleJoin() throws IOException {
+  public void testHandleJoin() {
     String serverMessage = "{\"method-name\":\"join\",\"arguments\":{}}";
     testProxyController(serverMessage);
     verify(mockPlayer, never()).setup(anyInt(), anyInt(), anyMap());
@@ -67,25 +59,27 @@ class ProxyControllerTest {
   }
 
   @Test
-  public void testHandleSetup() throws IOException {
+  public void testHandleSetup() {
     String serverMessage = "{\"method-name\":\"setup\",\"arguments\":{\"width\":7,\"height\":7,\""
         +
         "fleet-spec\":{\"BATTLESHIP\":1, \"DESTROYER\":1, \"CARRIER\":1, \"SUBMARINE\":1}}}";
+
     testProxyController(serverMessage);
     verify(mockPlayer, times(1)).setup(anyInt(), anyInt(), anyMap());
   }
 
   @Test
-  public void testHandleReportDamage() throws IOException {
+  public void testHandleReportDamage() {
     String serverMessage = "{\"method-name\":\"report-damage\",\"arguments\":"
         +
         "{\"coordinates\":[{\"x\":1,\"y\":2}]}}";
+
     testProxyController(serverMessage);
     verify(mockPlayer, times(1)).reportDamage(anyList());
   }
 
   @Test
-  public void testHandleSuccessfulHits() throws IOException {
+  public void testHandleSuccessfulHits() {
     String serverMessage = "{\"method-name\":\"successful-hits\",\"arguments\":{\"coordinates\":"
         +
         "[{\"x\":1,\"y\":2}]}}";
@@ -93,21 +87,25 @@ class ProxyControllerTest {
     verify(mockPlayer, times(1)).successfulHits(anyList());
   }
 
-  private void testProxyController(String serverMessage) throws IOException {
-    ByteArrayInputStream serverInputStream = new ByteArrayInputStream(serverMessage.getBytes());
+  private void testProxyController(String serverMessage) {
+    try {
+      ByteArrayInputStream serverInputStream = new ByteArrayInputStream(serverMessage.getBytes());
 
-    when(mockSocket.getInputStream()).thenReturn(serverInputStream);
-    when(mockSocket.getOutputStream()).thenReturn(serverOutputStream);
+      when(mockSocket.getInputStream()).thenReturn(serverInputStream);
+      when(mockSocket.getOutputStream()).thenReturn(serverOutputStream);
 
-    ProxyController controller = new ProxyController(mockSocket, mockPlayer);
-    controller.model = new BattleSalvoModel(7, 7, new HashMap<>());
-    controller.run();
+      ProxyController controller = new ProxyController(mockSocket, mockPlayer);
+      controller.model = new BattleSalvoModel(7, 7, new HashMap<>());
+      controller.run();
 
-    verify(mockSocket, times(1)).getInputStream();
-    verify(mockSocket, times(1)).getOutputStream();
+      verify(mockSocket, times(1)).getInputStream();
+      verify(mockSocket, times(1)).getOutputStream();
 
-    serverInputStream.close();
-    serverOutputStream.close();
-    mockSocket.close();
+      serverInputStream.close();
+      serverOutputStream.close();
+      mockSocket.close();
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
+    }
   }
 }

@@ -3,7 +3,6 @@ package cs3500.pa04.client.controller;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cs3500.pa04.client.controller.Controller;
 import cs3500.pa04.client.model.BattleSalvoModel;
 import cs3500.pa04.client.model.GameResult;
 import cs3500.pa04.client.model.GameType;
@@ -75,7 +74,6 @@ public class ProxyController implements Controller {
 
     } catch (IOException e) {
       System.err.println("Disconnected from server or parsing exception");
-      e.printStackTrace();
     }
   }
 
@@ -121,7 +119,7 @@ public class ProxyController implements Controller {
   /**
    * Parses the specifications sent from the server
    *
-   * @param iterator an iterator used to create values for the specifications map
+   * @param iterator       an iterator used to create values for the specifications map
    * @param specifications the specifications sent to players for setup
    */
   private void parseSpecifications(Iterator<Map.Entry<String, JsonNode>> iterator,
@@ -137,7 +135,7 @@ public class ProxyController implements Controller {
   /**
    * Formats player setups as a ship json array
    *
-   * @param playerSetup the list of ships in the player's setup
+   * @param playerSetup   the list of ships in the player's setup
    * @param shipJsonArray the array of ship jsons to be filled
    */
   private void formatAsShipJson(List<Ship> playerSetup, ShipJson[] shipJsonArray) {
@@ -181,7 +179,7 @@ public class ProxyController implements Controller {
   /**
    * Formates a list of coordinates into an array of coordinate jsons
    *
-   * @param shots the list of coordinates to be converted to jsons
+   * @param shots          the list of coordinates to be converted to jsons
    * @param coordJsonArray the array to be updated and filled
    */
   private void formatShotsToCoordJsonArray(List<Coord> shots, CoordJson[] coordJsonArray) {
@@ -215,7 +213,7 @@ public class ProxyController implements Controller {
    * Parses the coordinate jsons sent from the server into a list of shots
    *
    * @param coordinates the json sent from the server
-   * @param shots the list of shots to be filled
+   * @param shots       the list of shots to be filled
    */
   private void parseCoordinateArguments(JsonNode coordinates, List<Coord> shots) {
     for (JsonNode coordinateNode : coordinates) {
