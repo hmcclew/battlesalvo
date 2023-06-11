@@ -177,6 +177,7 @@ public class ProxyController implements Controller {
 
     JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
     this.out.println(messageResponse);
+
   }
 
   /**
@@ -209,6 +210,7 @@ public class ProxyController implements Controller {
     MessageJson messageJson = new MessageJson("take-shots", jsonResponse);
 
     JsonNode messageResponse = JsonUtils.serializeRecord(messageJson);
+
     this.out.println(messageResponse);
   }
 
@@ -231,6 +233,7 @@ public class ProxyController implements Controller {
    * Handles the report-damage method request from the server
    */
   private void handleReportDamage(JsonNode arguments) {
+    model.updateAllowedShots((AbstractPlayer) player);
     List<Coord> opponentShots = new ArrayList<>();
     JsonNode coordinates = arguments.path("coordinates");
 

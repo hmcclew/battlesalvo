@@ -25,6 +25,28 @@ public abstract class AbstractPlayer implements Player {
   private int numRemainingShips;
   private int allowedShots;
 
+  private int boardSizeX;
+
+  private int boardSizeY;
+
+  /**
+   * getter method for board size x
+   *
+   * @return board size x
+   */
+  public int getBoardSizeX() {
+    return boardSizeX;
+  }
+
+  /**
+   * getter method for board size y
+   *
+   * @return board size y
+   */
+  public int getBoardSizeY() {
+    return boardSizeY;
+  }
+
   /**
    * Constructor for an abstract player
    */
@@ -113,6 +135,8 @@ public abstract class AbstractPlayer implements Player {
    */
   @Override
   public List<Ship> setup(int height, int width, Map<ShipType, Integer> specifications) {
+    boardSizeY = height;
+    boardSizeX = width;
     for (Map.Entry<ShipType, Integer> entry : specifications.entrySet()) {
       ShipType shipType = entry.getKey();
       int numShipType = entry.getValue();

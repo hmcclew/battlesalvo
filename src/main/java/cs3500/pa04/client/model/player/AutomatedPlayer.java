@@ -38,8 +38,8 @@ public class AutomatedPlayer extends AbstractPlayer {
     Random random = new Random();
     int count = 0;
     while (count < getAllowedShots()) {
-      int x = random.nextInt(16);
-      int y = random.nextInt(16);
+      int x = random.nextInt(getBoardSizeX());
+      int y = random.nextInt(getBoardSizeY());
       Coord firedShot = new BattleSalvoCoord(x, y);
       if (!firedShots.contains(firedShot)) {
         firedShots.add(firedShot);
