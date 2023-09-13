@@ -25,7 +25,7 @@ In traditional Battleship, the boat sizes are:
 - Destroyer: Size 4
 - Submarine: Size 3
 
-- ### Fleet Size
+### Fleet Size
 
 In Battleship, there is one of each boat type. But, in BattleSalvo, there may be several of each boat type.
 
